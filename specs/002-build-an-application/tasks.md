@@ -45,28 +45,28 @@ Based on plan.md structure decision: Single React project with `src/` at reposit
 
 ### Contract Tests
 
-- [ ] T019 [P] Contract test GET /api/issues in tests/integration/issues-api.test.ts
-- [ ] T020 [P] Contract test POST /api/issues in tests/integration/issues-api.test.ts
-- [ ] T021 [P] Contract test PATCH /api/issues/:id/status in tests/integration/issues-api.test.ts
-- [ ] T022 [P] Contract test GET /api/issues/:id/comments in tests/integration/comments-api.test.ts
-- [ ] T023 [P] Contract test POST /api/issues/:id/comments in tests/integration/comments-api.test.ts
-- [ ] T024 [P] Contract test PATCH /api/notifications/:id/read in tests/integration/notifications-api.test.ts
-- [ ] T025 [P] Contract test Supabase authentication flow in tests/integration/auth-api.test.ts
+- [x] T019 [P] Contract test GET /api/issues in tests/integration/issues-api.test.ts
+- [x] T020 [P] Contract test POST /api/issues in tests/integration/issues-api.test.ts
+- [x] T021 [P] Contract test PATCH /api/issues/:id/status in tests/integration/issues-api.test.ts
+- [x] T022 [P] Contract test GET /api/issues/:id/comments in tests/integration/comments-api.test.ts
+- [x] T023 [P] Contract test POST /api/issues/:id/comments in tests/integration/comments-api.test.ts
+- [x] T024 [P] Contract test PATCH /api/notifications/:id/read in tests/integration/notifications-api.test.ts
+- [x] T025 [P] Contract test Supabase authentication flow in tests/integration/auth-api.test.ts
 
 ### Component Tests
 
-- [ ] T026 [P] Test IssueCard component rendering and interactions in tests/unit/components/IssueCard.test.tsx
-- [ ] T027 [P] Test KanbanBoard drag-and-drop functionality in tests/unit/components/KanbanBoard.test.tsx
-- [ ] T028 [P] Test IssuesList filtering and sorting in tests/unit/components/IssuesList.test.tsx
-- [ ] T029 [P] Test CreateIssueForm validation in tests/unit/components/CreateIssueForm.test.tsx
-- [ ] T030 [P] Test CommentThread real-time updates in tests/unit/components/CommentThread.test.tsx
+- [x] T026 [P] Test IssueCard component rendering and interactions in tests/unit/components/IssueCard.test.tsx
+- [x] T027 [P] Test KanbanBoard drag-and-drop functionality in tests/unit/components/KanbanBoard.test.tsx
+- [x] T028 [P] Test IssuesList filtering and sorting in tests/unit/components/IssuesList.test.tsx
+- [x] T029 [P] Test CreateIssueForm validation in tests/unit/components/CreateIssueForm.test.tsx
+- [x] T030 [P] Test CommentThread real-time updates in tests/unit/components/CommentThread.test.tsx
 
 ### Integration Tests
 
-- [ ] T031 [P] Integration test complete issue workflow (create → dev → qa → pm → resolved) in tests/integration/issue-workflow.test.ts
-- [ ] T032 [P] Integration test role-based permissions and workflow transitions in tests/integration/role-permissions.test.ts
-- [ ] T033 [P] Integration test real-time notifications system in tests/integration/notifications.test.ts
-- [ ] T034 [P] Integration test comment system with mentions in tests/integration/comments.test.ts
+- [x] T031 [P] Integration test complete issue workflow (create → dev → qa → pm → resolved) in tests/integration/issue-workflow.test.ts
+- [x] T032 [P] Integration test role-based permissions and workflow transitions in tests/integration/role-permissions.test.ts
+- [x] T033 [P] Integration test real-time notifications system in tests/integration/notifications.test.ts
+- [x] T034 [P] Integration test comment system with mentions in tests/integration/comments.test.ts
 
 ## Phase 3.5: Core Implementation (ONLY after tests are failing)
 
