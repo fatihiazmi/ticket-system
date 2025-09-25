@@ -72,11 +72,11 @@ Based on plan.md structure decision: Single React project with `src/` at reposit
 
 ### Authentication & User Management
 
-- [ ] T035 [P] Supabase client configuration in src/lib/supabase.ts
-- [ ] T036 [P] Authentication service with sign up/in/out in src/services/auth.service.ts
-- [ ] T037 [P] User profile service for role management in src/services/user.service.ts
-- [ ] T038 [P] Auth hook for authentication state in src/hooks/useAuth.ts
-- [ ] T039 [P] Protected route component in src/components/auth/ProtectedRoute.tsx
+- [x] T035 [P] Supabase client configuration in src/lib/supabase.ts
+- [x] T036 [P] Authentication service with sign up/in/out in src/services/auth.service.ts
+- [x] T037 [P] User profile service for role management in src/services/user.service.ts
+- [x] T038 [P] Auth hook for authentication state in src/hooks/useAuth.ts
+- [x] T039 [P] Protected route component in src/components/auth/ProtectedRoute.tsx
 
 ### State Management
 
