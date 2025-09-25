@@ -5,7 +5,7 @@ import { relations } from 'drizzle-orm';
 // ENUMS
 // =====================================================
 
-export const roleEnum = pgEnum('role', ['developer', 'qa', 'product_manager']);
+export const roleEnum = pgEnum('role', ['developer', 'qa', 'product_manager', 'superadmin']);
 export const issueTypeEnum = pgEnum('issue_type', ['bug', 'feature']);
 export const priorityEnum = pgEnum('priority', ['high', 'medium', 'low']);
 export const issueStatusEnum = pgEnum('issue_status', [

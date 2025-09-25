@@ -8,8 +8,8 @@
 import { z } from 'zod';
 
 // User role validation
-export const userRoleSchema = z.enum(['developer', 'qa', 'product_manager'], {
-  errorMap: () => ({ message: 'Role must be developer, qa, or product_manager' }),
+export const userRoleSchema = z.enum(['developer', 'qa', 'product_manager', 'superadmin'], {
+  errorMap: () => ({ message: 'Role must be developer, qa, product_manager, or superadmin' }),
 });
 
 // User profile validation schemas

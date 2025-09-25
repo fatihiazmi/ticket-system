@@ -57,6 +57,45 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     margin: 0;
+    padding: 0;
     min-height: 100vh;
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  #root {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Override any Tailwind form styles that might conflict */
+  .form-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    align-items: start !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .form-field {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .signup-form-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
+    grid-column: 1 / -1 !important;
+  }
+
+  @media (max-width: 640px) {
+    .signup-form-grid {
+      grid-template-columns: 1fr !important;
+    }
   }
 }

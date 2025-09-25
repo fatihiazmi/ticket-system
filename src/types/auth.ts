@@ -23,7 +23,7 @@ export interface UserProfile {
   updatedAt: string;
 }
 
-export type UserRole = 'developer' | 'qa' | 'product_manager';
+export type UserRole = 'developer' | 'qa' | 'product_manager' | 'superadmin';
 
 export interface CreateUserProfileRequest {
   fullName: string;
@@ -111,6 +111,16 @@ export const ROLE_PERMISSIONS = {
     canEditAllIssues: true,
     canApproveDevReview: false,
     canApproveQAReview: false,
+    canApprovePMReview: true,
+    canViewInternalComments: true,
+    canManageUsers: true,
+  },
+  superadmin: {
+    canCreateIssues: true,
+    canEditOwnIssues: true,
+    canEditAllIssues: true,
+    canApproveDevReview: true,
+    canApproveQAReview: true,
     canApprovePMReview: true,
     canViewInternalComments: true,
     canManageUsers: true,
