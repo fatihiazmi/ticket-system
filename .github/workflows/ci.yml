@@ -21,7 +21,15 @@ jobs:
         cache: 'npm'
         
     - name: Install dependencies
-      run: npm ci
+      run: npm ci || npm install
+      
+    - name: Rebuild native dependencies
+      run: npm rebuild --verbose
+      continue-on-error: true
+      
+    - name: Install platform-specific Rollup binary
+      run: npm install @rollup/rollup-linux-x64-gnu --no-save
+      continue-on-error: true
       
     - name: Run type checking
       run: npx tsc --noEmit
