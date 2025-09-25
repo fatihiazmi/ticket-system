@@ -15,7 +15,7 @@ CREATE TABLE user_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name TEXT NOT NULL,
   avatar_url TEXT,
-  role TEXT NOT NULL CHECK (role IN ('developer', 'qa', 'product_manager')),
+  role TEXT NOT NULL CHECK (role IN ('developer', 'qa', 'product_manager', 'superadmin')),
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
@@ -267,6 +267,24 @@ BEGIN
   RETURN deleted_count;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Create trigger function to automatically create user profiles
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.user_profiles (id, full_name, role)
+  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email), 'developer');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Drop existing trigger if it exists
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+-- Create trigger to automatically create user profile when user signs up
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- =====================================================
 -- INITIAL DATA (Optional - for development)

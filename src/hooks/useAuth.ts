@@ -4,8 +4,8 @@ import {
   type SignUpCredentials,
   type SignInCredentials,
   type AuthResponse,
-} from '../services/auth.service.js';
-import type { AuthUser } from '../lib/supabase.js';
+} from '../services/auth.service.ts';
+import type { AuthUser } from '../lib/supabase.ts';
 
 export interface AuthState {
   user: AuthUser | null;

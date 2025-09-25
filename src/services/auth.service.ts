@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabase.js';
-import type { AuthError, AuthUser } from '../lib/supabase.js';
+import { supabase } from '../lib/supabase.ts';
+import type { AuthError, AuthUser } from '../lib/supabase.ts';
 
 export interface SignUpCredentials {
   email: string;
