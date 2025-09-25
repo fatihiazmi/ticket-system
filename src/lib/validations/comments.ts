@@ -135,7 +135,7 @@ export const commentWithAuthorResponseSchema = commentResponseSchema.extend({
     id: uuidSchema,
     fullName: z.string(),
     role: z.string(),
-    avatarUrl: z.string().url().nullable(),
+    avatarUrl: z.string().url().optional().or(z.literal('')),
   }),
 });
 
