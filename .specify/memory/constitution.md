@@ -1,50 +1,61 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+Version: 1.0.0 (Initial constitution creation)
+Added principles:
+- I. Code Quality Standards (NEW)
+- II. Testing Standards (NEW)
+- III. User Experience Consistency (NEW)
+- IV. Performance Requirements (NEW)
+- V. Type Safety & Error Handling (NEW)
+Added sections:
+- Performance Standards (NEW)
+- Development Workflow (NEW)
+Templates status:
+✅ plan-template.md - Constitution Check section will be populated with these principles
+⚠ spec-template.md - Requires validation for alignment with quality standards
+⚠ tasks-template.md - Should reflect principle-driven task categorization
+⚠ agent-file-template.md - Should reference these standards for development guidance
+-->
+
+# Ticket System Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Code Quality Standards
+All code MUST maintain high quality through automated tooling and human review. TypeScript strict mode is mandatory with zero `@ts-ignore` usage except with documented justification. ESLint rules MUST be followed with zero warnings in production builds. Code coverage MUST remain above 85% for critical paths. All functions MUST have clear, single responsibilities with descriptive naming. Complex logic requires inline comments explaining the "why" not the "what".
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Rationale: Quality gates prevent technical debt accumulation and ensure maintainable, predictable codebase evolution.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Testing Standards (NON-NEGOTIABLE)
+Test-Driven Development is MANDATORY for all business logic and critical user flows. Tests MUST be written before implementation and MUST fail initially. Component tests are required for all React components with both happy path and error scenarios. Integration tests MUST cover API endpoints and database interactions. End-to-end tests are required for complete user workflows. All tests MUST run in under 30 seconds for rapid feedback cycles.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Rationale: Comprehensive testing ensures reliability, prevents regressions, and enables confident refactoring.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. User Experience Consistency
+UI components MUST follow a centralized design system with reusable primitives. Loading states are MANDATORY for all async operations exceeding 200ms response time. Error boundaries MUST handle all potential failure states gracefully with user-friendly messages. Forms MUST provide real-time validation with clear error messaging. Navigation patterns MUST be consistent throughout the application. Accessibility standards (WCAG 2.1 AA) are NON-NEGOTIABLE requirements.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Rationale: Consistent UX builds user trust, reduces cognitive load, and ensures inclusive access for all users.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Performance Requirements
+Initial page load MUST complete within 2 seconds on 3G networks. Core Web Vitals MUST meet Google's "Good" thresholds: LCP < 2.5s, FID < 100ms, CLS < 0.1. Bundle size increases require explicit justification and performance impact analysis. Images MUST be optimized and served in modern formats (WebP/AVIF). Database queries MUST be optimized with proper indexing and connection pooling. Memory leaks are prohibited - all subscriptions and event listeners MUST be properly cleaned up.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Rationale: Performance directly impacts user satisfaction, SEO rankings, and business conversion rates.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Type Safety & Error Handling
+All data boundaries (API responses, user inputs, external integrations) MUST be validated using Zod schemas. Runtime type guards are required for dynamic content. Error handling MUST be explicit with proper error types and structured logging. API errors MUST be categorized (4xx client errors, 5xx server errors) with appropriate user feedback. Global error boundaries MUST capture and report unexpected failures. Null/undefined checks are mandatory for all optional properties.
+
+Rationale: Type safety prevents runtime errors, improves developer experience, and enables confident refactoring.
+
+## Performance Standards
+
+React components MUST implement proper memoization (React.memo, useMemo, useCallback) for expensive operations. State updates MUST be batched to prevent unnecessary re-renders. Virtual scrolling is required for lists exceeding 100 items. Code splitting MUST be implemented at route level with proper loading fallbacks. Third-party dependencies MUST be evaluated for bundle size impact before adoption. Database connection pools MUST be configured for optimal resource utilization.
+
+## Development Workflow
+
+All features MUST start with a detailed specification in `/specs/` following the spec template. Code reviews are mandatory with at least one approval from a senior developer. Pre-commit hooks MUST enforce linting, formatting, and type checking. Continuous Integration MUST run full test suites with deployment blocking on failures. Feature branches MUST be short-lived (< 3 days) with regular rebasing. Commit messages MUST follow conventional commit format for automated changelog generation.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices and coding standards. All pull requests MUST demonstrate compliance with these principles or include explicit justification for deviations. Constitution amendments require team consensus and migration plans for existing code. Complexity additions MUST be justified against the simplicity principle. Regular constitution reviews will be conducted quarterly to ensure relevance and effectiveness.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-09-25 | **Last Amended**: 2025-09-25
