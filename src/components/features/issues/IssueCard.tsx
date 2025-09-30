@@ -100,10 +100,10 @@ export function IssueCard({
       )}
       onClick={handleCardClick}
     >
-      <CardContent className='p-4'>
+      <CardContent className='p-6'>
         {/* Header */}
-        <div className='mb-3 flex items-start justify-between'>
-          <div className='flex items-center gap-2'>
+        <div className='mb-5 flex items-start justify-between'>
+          <div className='flex flex-wrap items-center gap-2'>
             <Badge variant='outline' className={cn('border text-xs', type.color)}>
               <TypeIcon className='mr-1 h-3 w-3' />
               {type.label}
@@ -122,20 +122,24 @@ export function IssueCard({
         </div>
 
         {/* Title */}
-        <h3 className='mb-2 line-clamp-2 text-sm font-semibold text-foreground'>{issue.title}</h3>
+        <h3 className='mb-4 line-clamp-3 text-base font-semibold leading-relaxed text-foreground'>
+          {issue.title}
+        </h3>
 
         {/* Description */}
         {issue.description && (
-          <p className='mb-3 line-clamp-2 text-sm text-muted-foreground'>{issue.description}</p>
+          <p className='mb-5 line-clamp-3 text-sm leading-relaxed text-muted-foreground'>
+            {issue.description}
+          </p>
         )}
 
         {/* Status Badge */}
-        <div className='mb-3'>
+        <div className='mb-5'>
           <Badge className={cn('text-xs', status.color)}>{status.label}</Badge>
         </div>
 
         {/* Footer */}
-        <div className='flex items-center justify-between border-t border-border pt-2'>
+        <div className='flex items-center justify-between border-t border-border pt-4'>
           <div className='flex items-center gap-2'>
             {issue.assignedTo ? (
               <Avatar className='h-6 w-6'>
@@ -159,7 +163,7 @@ export function IssueCard({
 
         {/* Time tracking (if available) */}
         {(issue.estimatedHours || issue.actualHours) && (
-          <div className='mt-2 flex items-center gap-4 border-t border-border pt-2 text-xs text-muted-foreground'>
+          <div className='mt-4 flex items-center gap-4 border-t border-border pt-4 text-xs text-muted-foreground'>
             {issue.estimatedHours && (
               <div className='flex items-center gap-1'>
                 <Clock className='h-3 w-3' />

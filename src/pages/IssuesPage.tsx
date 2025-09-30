@@ -34,7 +34,7 @@ const convertUserProfile = (user: any): UserProfile => ({
 const IssuesPage: React.FC = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState<ViewMode>('kanban');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<IssueStatus | 'all'>('all');
   const [priorityFilter, setPriorityFilter] = useState<IssuePriority | 'all'>('all');
@@ -192,15 +192,6 @@ const IssuesPage: React.FC = () => {
             {/* View Toggle */}
             <div className='flex items-center gap-2 rounded-lg border bg-white p-1'>
               <Button
-                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                size='sm'
-                onClick={() => setViewMode('kanban')}
-                className='flex items-center gap-2'
-              >
-                <ViewHorizontalIcon className='h-4 w-4' />
-                Kanban
-              </Button>
-              <Button
                 variant={viewMode === 'list' ? 'default' : 'ghost'}
                 size='sm'
                 onClick={() => setViewMode('list')}
@@ -208,6 +199,15 @@ const IssuesPage: React.FC = () => {
               >
                 <ListBulletIcon className='h-4 w-4' />
                 List
+              </Button>
+              <Button
+                variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                size='sm'
+                onClick={() => setViewMode('kanban')}
+                className='flex items-center gap-2'
+              >
+                <ViewHorizontalIcon className='h-4 w-4' />
+                Kanban
               </Button>
             </div>
           </div>
@@ -226,14 +226,17 @@ const IssuesPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
+          className={viewMode === 'kanban' ? '-mx-4 sm:-mx-6 lg:-mx-8' : ''}
         >
           {viewMode === 'kanban' ? (
-            <KanbanBoard
-              issues={issues}
-              currentUser={convertUserProfile(user)}
-              onIssueClick={handleIssueClick}
-              isLoading={isLoading}
-            />
+            <div className='px-4 sm:px-6 lg:px-8'>
+              <KanbanBoard
+                issues={issues}
+                currentUser={convertUserProfile(user)}
+                onIssueClick={handleIssueClick}
+                isLoading={isLoading}
+              />
+            </div>
           ) : (
             <IssuesList
               issues={issues}

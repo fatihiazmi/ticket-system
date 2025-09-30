@@ -128,27 +128,31 @@ export function KanbanBoard({
 
   if (isLoading) {
     return (
-      <div className={cn('grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6', className)}>
-        {columns.map(column => (
-          <Card key={column.status} className='min-h-[400px]'>
-            <CardHeader className={cn('pb-3', column.color)}>
-              <CardTitle className='text-sm font-medium'>{column.title}</CardTitle>
-            </CardHeader>
-            <CardContent className='space-y-3 p-3'>
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className='animate-pulse'>
-                  <div className='h-20 rounded bg-gray-200'></div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
+      <div className='overflow-x-auto pb-4'>
+        <div className={cn('flex min-w-max gap-6', className)}>
+          {columns.map(column => (
+            <div key={column.status} className='w-80 flex-shrink-0'>
+              <Card className='min-h-[500px]'>
+                <CardHeader className={cn('pb-4', column.color)}>
+                  <CardTitle className='text-sm font-medium'>{column.title}</CardTitle>
+                </CardHeader>
+                <CardContent className='space-y-4 p-4'>
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className='animate-pulse'>
+                      <div className='h-32 rounded bg-gray-200'></div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn('space-y-6', className)}>
       {/* Header */}
       <div className='flex items-center justify-between'>
         <div>
@@ -171,18 +175,21 @@ export function KanbanBoard({
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className='grid min-h-[600px] grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6'>
-          {columns.map(column => (
-            <KanbanColumn
-              key={column.status}
-              status={column.status}
-              title={column.title}
-              color={column.color}
-              issues={issuesByStatus[column.status]}
-              currentUser={currentUser}
-              onIssueClick={onIssueClick}
-            />
-          ))}
+        <div className='overflow-x-auto pb-4'>
+          <div className='flex min-w-max gap-6'>
+            {columns.map(column => (
+              <div key={column.status} className='w-80 flex-shrink-0'>
+                <KanbanColumn
+                  status={column.status}
+                  title={column.title}
+                  color={column.color}
+                  issues={issuesByStatus[column.status]}
+                  currentUser={currentUser}
+                  onIssueClick={onIssueClick}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         <DragOverlay>

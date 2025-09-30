@@ -34,11 +34,11 @@ export function KanbanColumn({
     <Card
       ref={setNodeRef}
       className={cn(
-        'transition-colors duration-200',
+        'flex h-full min-h-[600px] flex-col transition-colors duration-200',
         isOver && 'ring-2 ring-primary ring-offset-2'
       )}
     >
-      <CardHeader className={cn('pb-3', color)}>
+      <CardHeader className={cn('flex-shrink-0 pb-4', color)}>
         <div className='flex items-center justify-between'>
           <CardTitle className='text-sm font-medium'>{title}</CardTitle>
           <Badge variant='secondary' className='text-xs'>
@@ -47,9 +47,9 @@ export function KanbanColumn({
         </div>
       </CardHeader>
 
-      <CardContent className='min-h-[300px] p-3'>
+      <CardContent className='flex flex-1 flex-col p-4'>
         <SortableContext items={issueIds} strategy={verticalListSortingStrategy}>
-          <div className='space-y-3'>
+          <div className='flex-1 space-y-4'>
             {issues.map(issue => (
               <SortableIssueCard
                 key={issue.id}
@@ -62,7 +62,7 @@ export function KanbanColumn({
         </SortableContext>
 
         {issues.length === 0 && (
-          <div className='flex h-24 items-center justify-center text-sm text-muted-foreground'>
+          <div className='flex h-40 flex-shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-gray-200 text-sm text-muted-foreground'>
             Drop issues here
           </div>
         )}
