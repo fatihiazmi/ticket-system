@@ -49,7 +49,6 @@ export const useAuth = (): UseAuthReturn => {
     // Safety timeout to prevent infinite loading
     timeoutId = setTimeout(() => {
       if (mounted) {
-        console.warn('Auth initialization timeout - setting loading to false');
         setState(prev => ({
           ...prev,
           loading: false,
@@ -59,26 +58,17 @@ export const useAuth = (): UseAuthReturn => {
     }, 15000); // 15 second safety timeout
 
     // Fetch user profile helper function
-    const fetchUserProfile = async (userId: string, source: string = 'unknown') => {
+    const fetchUserProfile = async (userId: string) => {
       try {
-        console.log(`Fetching profile for user: ${userId} (source: ${source})`);
         const { data: profileData, error: profileError } = await supabase
           .from('user_profiles')
           .select('*')
           .eq('id', userId)
           .single();
 
-        console.log('Profile fetch result:', {
-          hasProfile: !!profileData,
-          error: profileError?.message,
-          userId: userId,
-          source,
-        });
-
         if (mounted) {
           clearTimeout(timeoutId);
           if (profileError) {
-            console.warn('Profile not found, but user is authenticated. Setting loading to false.');
             // Profile doesn't exist, but user is authenticated
             // This is common for new users who haven't completed profile setup
             setState(prev => ({
@@ -114,14 +104,12 @@ export const useAuth = (): UseAuthReturn => {
     // Fetch the session once, and subscribe to auth state changes
     const fetchSession = async () => {
       try {
-        console.log('Fetching initial session...');
         const {
           data: { session },
           error,
         } = await supabase.auth.getSession();
 
         if (error) {
-          console.error('Error fetching session:', error);
           if (mounted) {
             clearTimeout(timeoutId);
             setState(prev => ({
@@ -134,16 +122,12 @@ export const useAuth = (): UseAuthReturn => {
           return;
         }
 
-        console.log('Initial session result:', { hasSession: !!session, hasUser: !!session?.user });
-
         if (mounted) {
           if (session?.user) {
-            console.log('Session found, fetching profile for user:', session.user.id);
             // User is authenticated, fetch their profile
             setState(prev => ({ ...prev, loading: true }));
-            await fetchUserProfile(session.user.id, 'initial-session');
+            await fetchUserProfile(session.user.id);
           } else {
-            console.log('No session found, setting user to null');
             clearTimeout(timeoutId);
             // No session, user is not authenticated
             setState(prev => ({
@@ -179,8 +163,6 @@ export const useAuth = (): UseAuthReturn => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', { event, session: !!session, isInitializing });
-
       if (!mounted || isInitializing) return;
 
       // Clear timeout on any auth state change
@@ -197,7 +179,7 @@ export const useAuth = (): UseAuthReturn => {
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         if (session?.user) {
           setState(prev => ({ ...prev, loading: true }));
-          await fetchUserProfile(session.user.id, `auth-event-${event}`);
+          await fetchUserProfile(session.user.id);
         }
       }
     });
