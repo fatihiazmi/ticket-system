@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth.js';
-import { AppLoadingSkeleton } from '../ui/AppLoadingSkeleton';
+import { useAuthStore } from '../../stores/authStore';
 
 export interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -19,11 +18,6 @@ export interface ProtectedRouteProps {
    * @default '/login'
    */
   redirectTo?: string;
-  /**
-   * Show loading spinner while checking authentication
-   * @default true
-   */
-  showLoading?: boolean;
 }
 
 /**
@@ -34,15 +28,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
   redirectTo = '/login',
-  showLoading = true,
 }) => {
-  const { user, loading, isAuthenticated, error, retryAuth } = useAuth();
+  const { user, error } = useAuthStore();
   const location = useLocation();
-
-  // Show loading skeleton while determining auth state
-  if (loading) {
-    return showLoading ? <AppLoadingSkeleton variant='dashboard' /> : null;
-  }
 
   // If there's an authentication error, show it
   if (error) {
@@ -72,7 +60,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
             <div className='mt-6 flex flex-col space-y-3'>
               <button
-                onClick={() => retryAuth()}
+                onClick={() => window.location.reload()}
                 className='inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
               >
                 Retry
@@ -92,7 +80,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Redirect to login if not authenticated
-  if (!isAuthenticated || !user) {
+  if (!user) {
     return <Navigate to={redirectTo} state={{ from: location.pathname }} replace />;
   }
 
@@ -161,9 +149,9 @@ export const useRoleCheck = (
     | 'product_manager'
     | Array<'developer' | 'qa' | 'product_manager'>
 ) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuthStore();
 
-  if (!isAuthenticated || !user || !requiredRole) {
+  if (!user || !requiredRole) {
     return { hasRole: true, userRole: user?.role || null };
   }
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { ExitIcon, PersonIcon, GearIcon } from '@radix-ui/react-icons';
-import { useAuthContext } from '../contexts/AuthContext.tsx';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../stores/authStore';
+import { useSignOut } from '../hooks/useAuthQuery';
 import { Button } from '../components/ui/Button.tsx';
 import {
   Card,
@@ -19,10 +21,16 @@ import {
 } from '../components/ui/DropdownMenu.tsx';
 
 const DashboardPage: React.FC = () => {
-  const { user, signOut } = useAuthContext();
+  const { user } = useAuthStore();
+  const signOutMutation = useSignOut();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      signOutMutation.mutate();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const getInitials = (name: string) => {
@@ -109,9 +117,18 @@ const DashboardPage: React.FC = () => {
                     Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <ExitIcon className='mr-2 h-4 w-4' />
-                    Sign out
+                  <DropdownMenuItem onClick={handleSignOut} disabled={signOutMutation.isPending}>
+                    {signOutMutation.isPending ? (
+                      <>
+                        <div className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600' />
+                        Signing out...
+                      </>
+                    ) : (
+                      <>
+                        <ExitIcon className='mr-2 h-4 w-4' />
+                        Sign out
+                      </>
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -240,8 +257,19 @@ const DashboardPage: React.FC = () => {
         {/* Recent Issues */}
         <Card className='border-0 bg-white/60 shadow-md backdrop-blur-sm'>
           <CardHeader>
-            <CardTitle className='text-xl'>Recent Issues</CardTitle>
-            <CardDescription>Latest issues that need your attention</CardDescription>
+            <div className='flex items-center justify-between'>
+              <div>
+                <CardTitle className='text-xl'>Recent Issues</CardTitle>
+                <CardDescription>Latest issues that need your attention</CardDescription>
+              </div>
+              <Button
+                variant='outline'
+                onClick={() => navigate('/issues')}
+                className='bg-white/80 hover:bg-white'
+              >
+                View All Issues
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className='space-y-4'>
