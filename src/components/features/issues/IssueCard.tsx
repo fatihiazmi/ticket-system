@@ -57,7 +57,7 @@ const typeConfig = {
   },
 };
 
-export function IssueCard({
+function IssueCardComponent({
   issue,
   currentUser,
   onClick,
@@ -80,6 +80,14 @@ export function IssueCard({
     onClick?.(issue.id);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Handle keyboard navigation for accessibility
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick?.(issue.id);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
@@ -99,6 +107,10 @@ export function IssueCard({
         className
       )}
       onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role='button'
+      aria-label={`Issue: ${issue.title}`}
     >
       <CardContent className='p-6'>
         {/* Header */}
@@ -182,3 +194,6 @@ export function IssueCard({
     </Card>
   );
 }
+
+// Memoize component to prevent unnecessary re-renders
+export const IssueCard = React.memo(IssueCardComponent);
