@@ -82,6 +82,18 @@ export interface CommentListResponse {
   hasMore: boolean;
 }
 
+export interface PaginatedCommentsResponse {
+  comments: CommentWithAuthor[];
+  pagination: {
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    items_per_page: number;
+    has_next: boolean;
+    has_previous: boolean;
+  };
+}
+
 // Comment content parsing and validation
 export interface ParsedMention {
   type: 'mention';

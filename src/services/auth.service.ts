@@ -140,30 +140,44 @@ class AuthService {
    */
   async getCurrentUser(): Promise<AuthResponse> {
     try {
+      console.log('Getting current user...');
+
+      // Get the current user from session
       const {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
 
       if (authError) {
+        console.warn('Auth error:', authError.message);
         return { data: null, error: { message: authError.message } };
       }
 
       if (!user) {
+        console.log('No user found in session');
         return { data: null, error: { message: 'No authenticated user' } };
       }
 
+      console.log('User found, fetching profile...');
+
       // Fetch the user profile
-      const { data: profileData, error: profileError } = await (supabase as any)
+      const { data: profileData, error: profileError } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
       if (profileError) {
+        console.warn('Profile fetch error:', profileError.message);
         return { data: null, error: { message: 'Failed to fetch user profile' } };
       }
 
+      if (!profileData) {
+        console.warn('No profile data found');
+        return { data: null, error: { message: 'User profile not found' } };
+      }
+
+      console.log('Profile fetched successfully');
       return { data: profileData, error: null };
     } catch (error) {
       return {
@@ -221,21 +235,30 @@ class AuthService {
    * Listen to auth state changes
    */
   onAuthStateChange(callback: (user: AuthUser | null) => void) {
-    return supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        // Fetch user profile when user signs in
-        const { data: profileData, error } = await (supabase as any)
-          .from('user_profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
+    return supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, !!session); // Debug log
 
-        if (!error && profileData) {
-          callback(profileData);
+      try {
+        if (session?.user) {
+          // Fetch user profile when user signs in or session is recovered
+          const { data: profileData, error } = await (supabase as any)
+            .from('user_profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          if (!error && profileData) {
+            callback(profileData);
+          } else {
+            console.error('Failed to fetch user profile:', error);
+            callback(null);
+          }
         } else {
+          // No session or user signed out
           callback(null);
         }
-      } else {
+      } catch (error) {
+        console.error('Error in auth state change handler:', error);
         callback(null);
       }
     });
@@ -260,11 +283,33 @@ class AuthService {
    * Get current session
    */
   async getSession() {
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
-    return { session, error };
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      return { session, error };
+    } catch (error) {
+      return {
+        session: null,
+        error: { message: error instanceof Error ? error.message : 'Failed to get session' },
+      };
+    }
+  }
+
+  /**
+   * Refresh current session
+   */
+  async refreshSession() {
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+      return { data, error };
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: error instanceof Error ? error.message : 'Failed to refresh session' },
+      };
+    }
   }
 }
 

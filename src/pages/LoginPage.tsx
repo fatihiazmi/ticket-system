@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { motion } from 'framer-motion';
-import { useAuthContext } from '../contexts/AuthContext.tsx';
+import { useAuthStore } from '../stores/authStore';
+import { useSignIn } from '../hooks/useAuthQuery';
 import { Button } from '../components/ui/Button.tsx';
 import { Input } from '../components/ui/Input.tsx';
 import { Label } from '../components/ui/Label.tsx';
@@ -17,11 +18,11 @@ import {
 import AuthLayout from '../components/layout/AuthLayout.tsx';
 
 const LoginPage: React.FC = () => {
-  const { user, signIn } = useAuthContext();
+  const { user } = useAuthStore();
+  const signInMutation = useSignIn();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Redirect if already logged in
   if (user) {
@@ -30,19 +31,13 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     setError(null);
 
     try {
-      const result = await signIn({ email, password });
-      if (result.error) {
-        setError(result.error.message);
-      }
-      // Navigation will happen automatically via context
+      await signInMutation.mutateAsync({ email, password });
+      // Navigation will happen automatically via auth state change
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during login');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -93,7 +88,7 @@ const LoginPage: React.FC = () => {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
-                    disabled={isLoading}
+                    disabled={signInMutation.isPending}
                     className='h-12 rounded-xl border-2 border-slate-200 bg-white/70 px-4 text-slate-800 backdrop-blur-sm transition-all duration-300 placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/20'
                   />
                 </div>
@@ -113,7 +108,7 @@ const LoginPage: React.FC = () => {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
-                    disabled={isLoading}
+                    disabled={signInMutation.isPending}
                     className='h-12 rounded-xl border-2 border-slate-200 bg-white/70 px-4 text-slate-800 backdrop-blur-sm transition-all duration-300 placeholder:text-slate-400 hover:border-slate-300 focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-500/20'
                   />
                 </div>
@@ -139,14 +134,14 @@ const LoginPage: React.FC = () => {
               >
                 <Button
                   type='submit'
-                  disabled={isLoading}
+                  disabled={signInMutation.isPending}
                   className={`h-14 w-full transform rounded-xl text-base font-semibold transition-all duration-300 ${
-                    isLoading
+                    signInMutation.isPending
                       ? 'cursor-not-allowed bg-slate-300 text-slate-500'
                       : 'border-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 text-white shadow-xl shadow-blue-500/25 hover:scale-[1.02] hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 hover:shadow-2xl hover:shadow-blue-500/40 active:scale-[0.98]'
                   }`}
                 >
-                  {isLoading ? (
+                  {signInMutation.isPending ? (
                     <div className='flex items-center justify-center gap-3'>
                       <div className='h-5 w-5 animate-spin rounded-full border-2 border-slate-400/30 border-t-slate-500' />
                       <span>Signing in...</span>

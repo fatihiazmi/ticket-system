@@ -80,47 +80,47 @@ Based on plan.md structure decision: Single React project with `src/` at reposit
 
 ### State Management
 
-- [ ] T040 [P] Zustand auth store in src/stores/auth.store.ts
-- [ ] T041 [P] Zustand notifications store in src/stores/notifications.store.ts
-- [ ] T042 [P] TanStack Query configuration in src/lib/queryClient.ts
-- [ ] T043 [P] Issues query hooks in src/hooks/queries/useIssues.ts
-- [ ] T044 [P] Comments query hooks in src/hooks/queries/useComments.ts
-- [ ] T045 [P] Notifications query hooks in src/hooks/queries/useNotifications.ts
+- [x] T040 [P] Zustand auth store in src/stores/auth.store.ts
+- [x] T041 [P] Zustand notifications store in src/stores/notifications.store.ts
+- [x] T042 [P] TanStack Query configuration in src/lib/queryClient.ts
+- [x] T043 [P] Issues query hooks in src/hooks/queries/useIssues.ts
+- [x] T044 [P] Comments query hooks in src/hooks/queries/useComments.ts
+- [x] T045 [P] Notifications query hooks in src/hooks/queries/useNotifications.ts
 
 ### Core Services
 
-- [ ] T046 [P] Issues service with CRUD operations in src/services/issues.service.ts
-- [ ] T047 [P] Comments service with threading in src/services/comments.service.ts
-- [ ] T048 [P] Notifications service with real-time subscriptions in src/services/notifications.service.ts
-- [ ] T049 [P] Workflow service for status transitions in src/services/workflow.service.ts
+- [x] T046 [P] Issues service with CRUD operations in src/services/issues.service.ts
+- [x] T047 [P] Comments service with threading in src/services/comments.service.ts
+- [x] T048 [P] Notifications service with real-time subscriptions in src/services/notifications.service.ts
+- [x] T049 [P] Workflow service for status transitions in src/services/workflow.service.ts
 
 ### UI Components - Base
 
-- [ ] T050 [P] Button component with variants in src/components/ui/Button.tsx
-- [ ] T051 [P] Input component with validation states in src/components/ui/Input.tsx
-- [ ] T052 [P] Select component for dropdowns in src/components/ui/Select.tsx
-- [ ] T053 [P] Modal component for dialogs in src/components/ui/Modal.tsx
-- [ ] T054 [P] Toast notification component in src/components/ui/Toast.tsx
+- [x] T050 [P] Button component with variants in src/components/ui/Button.tsx
+- [x] T051 [P] Input component with validation states in src/components/ui/Input.tsx
+- [x] T052 [P] Select component for dropdowns in src/components/ui/Select.tsx
+- [x] T053 [P] Modal component for dialogs in src/components/ui/Modal.tsx
+- [x] T054 [P] Toast notification component in src/components/ui/Toast.tsx
 
 ### UI Components - Feature Specific
 
-- [ ] T055 IssueCard component with priority indicators in src/components/features/issues/IssueCard.tsx
-- [ ] T056 CreateIssueForm with validation in src/components/features/issues/CreateIssueForm.tsx
-- [ ] T057 IssuesList with filtering and sorting in src/components/features/issues/IssuesList.tsx
-- [ ] T058 KanbanBoard with drag-and-drop in src/components/features/issues/KanbanBoard.tsx
-- [ ] T059 IssueDetails with workflow actions in src/components/features/issues/IssueDetails.tsx
-- [ ] T060 CommentThread with real-time updates in src/components/features/comments/CommentThread.tsx
-- [ ] T061 CommentForm with mention support in src/components/features/comments/CommentForm.tsx
-- [ ] T062 NotificationDropdown with mark as read in src/components/features/notifications/NotificationDropdown.tsx
+- [x] T055 IssueCard component with priority indicators in src/components/features/issues/IssueCard.tsx
+- [x] T056 CreateIssueForm with validation in src/components/features/issues/CreateIssueForm.tsx
+- [x] T057 IssuesList with filtering and sorting in src/components/features/issues/IssuesList.tsx
+- [x] T058 KanbanBoard with drag-and-drop in src/components/features/issues/KanbanBoard.tsx
+- [x] T059 IssueDetails with workflow actions in src/components/features/issues/IssueDetails.tsx
+- [x] T060 CommentThread with real-time updates in src/components/features/comments/CommentThread.tsx
+- [x] T061 CommentForm with mention support in src/components/features/comments/CommentForm.tsx
+- [x] T062 NotificationDropdown with mark as read in src/components/features/notifications/NotificationDropdown.tsx
 
 ### Pages & Routing
 
-- [ ] T063 React Router setup with protected routes in src/App.tsx
-- [ ] T064 Login page with Supabase auth in src/pages/LoginPage.tsx
-- [ ] T065 Register page with role selection in src/pages/RegisterPage.tsx
-- [ ] T066 Dashboard page with issue overview in src/pages/Dashboard.tsx
-- [ ] T067 Issues page with list/kanban toggle in src/pages/IssuesPage.tsx
-- [ ] T068 Issue detail page with comments in src/pages/IssueDetailPage.tsx
+- [x] T063 React Router setup with protected routes in src/App.tsx
+- [x] T064 Login page with Supabase auth in src/pages/LoginPage.tsx
+- [x] T065 Register page with role selection in src/pages/SignupPage.tsx
+- [x] T066 Dashboard page with issue overview in src/pages/Dashboard.tsx
+- [x] T067 Issues page with list/kanban toggle in src/pages/IssuesPage.tsx
+- [x] T068 Issue detail page with comments in src/pages/IssueDetailPage.tsx
 
 ## Phase 3.6: Integration & Real-time Features
 

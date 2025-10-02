@@ -111,11 +111,12 @@ export interface RejectWorkflowStepRequest {
 }
 
 export interface IssueFilters {
-  type?: IssueType[];
-  priority?: IssuePriority[];
-  status?: IssueStatus[];
-  assignedTo?: string[];
-  createdBy?: string[];
+  type?: IssueType;
+  priority?: IssuePriority;
+  status?: IssueStatus;
+  assignedTo?: string;
+  createdBy?: string;
+  search?: string;
   dateRange?: {
     from: string;
     to: string;
@@ -123,8 +124,8 @@ export interface IssueFilters {
 }
 
 export interface IssueSortOptions {
-  field: 'title' | 'priority' | 'status' | 'createdAt' | 'updatedAt' | 'assignedTo';
-  direction: 'asc' | 'desc';
+  field: 'title' | 'priority' | 'status' | 'created_at' | 'updated_at' | 'assigned_to';
+  order: 'asc' | 'desc';
 }
 
 export interface IssueListResponse {
@@ -133,6 +134,24 @@ export interface IssueListResponse {
   page: number;
   pageSize: number;
   hasMore: boolean;
+}
+
+export interface PaginatedIssuesResponse {
+  issues: Issue[];
+  pagination: {
+    current_page: number;
+    total_pages: number;
+    total_items: number;
+    items_per_page: number;
+    has_next: boolean;
+    has_previous: boolean;
+  };
+}
+
+export interface StatusTransitionRequest {
+  status: IssueStatus;
+  actualHours?: number;
+  comment?: string;
 }
 
 export interface KanbanColumn {
