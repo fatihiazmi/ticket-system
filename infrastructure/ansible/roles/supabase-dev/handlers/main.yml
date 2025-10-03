@@ -1,0 +1,21 @@
+---
+# Handlers for Supabase development role
+
+- name: reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: restart supabase-dev
+  systemd:
+    name: supabase-dev.service
+    state: restarted
+
+- name: stop supabase-dev
+  systemd:
+    name: supabase-dev.service
+    state: stopped
+
+- name: start supabase-dev
+  systemd:
+    name: supabase-dev.service
+    state: started

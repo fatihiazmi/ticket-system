@@ -1,0 +1,119 @@
+---
+# Supabase development deployment role
+
+- name: Create application directory
+  file:
+    path: "{{ app_directory }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+
+- name: Clone Supabase repository
+  git:
+    repo: https://github.com/supabase/supabase.git
+    dest: "{{ app_directory }}/supabase-repo"
+    depth: 1
+    force: yes
+  become_user: "{{ app_user }}"
+
+- name: Copy Supabase Docker configuration
+  copy:
+    src: "{{ app_directory }}/supabase-repo/docker/"
+    dest: "{{ app_directory }}/supabase/"
+    remote_src: yes
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+  become_user: "{{ app_user }}"
+
+- name: Clone application repository
+  git:
+    repo: "{{ app_repository_url | default('https://github.com/fatihiazmi/ticket-system.git') }}"
+    dest: "{{ app_directory }}/app"
+    force: yes
+  become_user: "{{ app_user }}"
+  when: app_repository_url is defined
+
+- name: Create volumes directories
+  file:
+    path: "{{ app_directory }}/supabase/volumes/{{ item }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0755'
+  loop:
+    - db/data
+    - storage
+    - functions
+    - logs
+    - api
+
+- name: Generate development environment file
+  template:
+    src: development.env.j2
+    dest: "{{ app_directory }}/.env"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0600'
+
+- name: Copy development docker-compose file
+  template:
+    src: docker-compose.dev.yml.j2
+    dest: "{{ app_directory }}/docker-compose.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+
+- name: Copy Kong configuration
+  template:
+    src: kong.yml.j2
+    dest: "{{ app_directory }}/supabase/volumes/api/kong.yml"
+    owner: "{{ app_user }}"
+    group: "{{ app_user }}"
+    mode: '0644'
+
+- name: Create systemd service for Supabase development
+  template:
+    src: supabase-dev.service.j2
+    dest: /etc/systemd/system/supabase-dev.service
+    mode: '0644'
+  notify:
+    - reload systemd
+    - restart supabase-dev
+
+- name: Enable Supabase development service
+  systemd:
+    name: supabase-dev.service
+    enabled: yes
+    daemon_reload: yes
+
+- name: Pull Docker images
+  shell: |
+    cd {{ app_directory }}
+    docker-compose pull
+  become_user: "{{ app_user }}"
+
+- name: Start Supabase development stack
+  systemd:
+    name: supabase-dev.service
+    state: started
+
+- name: Wait for services to be ready
+  wait_for:
+    port: "{{ item }}"
+    host: localhost
+    delay: 30
+    timeout: 300
+  loop:
+    - 8000  # Kong API Gateway
+    - 3001  # Supabase Studio
+    - 5432  # PostgreSQL
+
+- name: Create development database schema (if exists)
+  shell: |
+    cd {{ app_directory }}/app
+    if [ -f "src/lib/database/schema.sql" ]; then
+      docker exec supabase-db-dev psql -U postgres -d postgres -f /tmp/schema.sql
+    fi
+  become_user: "{{ app_user }}"
+  ignore_errors: yes

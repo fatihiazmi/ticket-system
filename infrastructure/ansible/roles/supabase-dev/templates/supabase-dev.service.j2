@@ -1,0 +1,17 @@
+[Unit]
+Description=Supabase Development Stack
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory={{ app_directory }}
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+ExecReload=/usr/local/bin/docker-compose restart
+User={{ app_user }}
+Group=docker
+
+[Install]
+WantedBy=multi-user.target
