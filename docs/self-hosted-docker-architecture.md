@@ -7,6 +7,7 @@ This document provides a **complete self-hosted Supabase architecture** for the 
 ## Architecture Overview: Self-Hosted Supabase Stack
 
 ### What We're Building
+
 ```
 ┌─────────────┐    ┌──────────────┐    ┌─────────────────────────────────┐
 │   Browser   │───▶│   AWS ALB    │───▶│         EC2 Instance(s)         │
@@ -42,6 +43,7 @@ This document provides a **complete self-hosted Supabase architecture** for the 
 ## Self-Hosted Supabase Components
 
 ### Official Supabase Services (No Custom Development Needed!)
+
 - **Kong API Gateway**: Routes all API requests to appropriate services
 - **GoTrue**: JWT-based authentication (same as Supabase Auth)
 - **PostgREST**: Auto-generated REST API from PostgreSQL schema
@@ -88,8 +90,8 @@ services:
       dockerfile: docker/frontend/Dockerfile
     container_name: ticket-frontend
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/ssl:/etc/nginx/ssl
@@ -107,10 +109,10 @@ services:
     healthcheck:
       test:
         [
-          "CMD",
-          "node",
-          "-e",
-          "require('http').get('http://localhost:3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://localhost:3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})",
         ]
       timeout: 5s
       interval: 5s
@@ -121,16 +123,16 @@ services:
     environment:
       STUDIO_PG_META_URL: http://meta:8080
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      
+
       DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION}
       DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT}
-      
+
       SUPABASE_URL: http://kong:8000
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
       AUTH_JWT_SECRET: ${JWT_SECRET}
-      
+
       LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
       LOGFLARE_URL: http://analytics:4000
       NEXT_PUBLIC_ENABLE_LOGS: true
@@ -151,7 +153,7 @@ services:
       analytics:
         condition: service_healthy
     environment:
-      KONG_DATABASE: "off"
+      KONG_DATABASE: 'off'
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
       KONG_DNS_ORDER: LAST,A,CNAME
       KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
@@ -176,15 +178,7 @@ services:
       analytics:
         condition: service_healthy
     healthcheck:
-      test:
-        [
-          "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
-          "http://localhost:9999/health"
-        ]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:9999/health']
       timeout: 5s
       interval: 5s
       retries: 3
@@ -193,20 +187,20 @@ services:
       GOTRUE_API_HOST: 0.0.0.0
       GOTRUE_API_PORT: 9999
       API_EXTERNAL_URL: ${API_EXTERNAL_URL}
-      
+
       GOTRUE_DB_DRIVER: postgres
       GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      
+
       GOTRUE_SITE_URL: ${SITE_URL}
       GOTRUE_URI_ALLOW_LIST: ${ADDITIONAL_REDIRECT_URLS}
       GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
-      
+
       GOTRUE_JWT_ADMIN_ROLES: service_role
       GOTRUE_JWT_AUD: authenticated
       GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
       GOTRUE_JWT_EXP: ${JWT_EXPIRY}
       GOTRUE_JWT_SECRET: ${JWT_SECRET}
-      
+
       GOTRUE_EXTERNAL_EMAIL_ENABLED: ${ENABLE_EMAIL_SIGNUP}
       GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: ${ENABLE_ANONYMOUS_USERS}
       GOTRUE_MAILER_AUTOCONFIRM: ${ENABLE_EMAIL_AUTOCONFIRM}
@@ -220,7 +214,7 @@ services:
       GOTRUE_MAILER_URLPATHS_CONFIRMATION: ${MAILER_URLPATHS_CONFIRMATION}
       GOTRUE_MAILER_URLPATHS_RECOVERY: ${MAILER_URLPATHS_RECOVERY}
       GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: ${MAILER_URLPATHS_EMAIL_CHANGE}
-      
+
       GOTRUE_EXTERNAL_PHONE_ENABLED: ${ENABLE_PHONE_SIGNUP}
       GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
     networks:
@@ -241,10 +235,10 @@ services:
       PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
       PGRST_DB_ANON_ROLE: anon
       PGRST_JWT_SECRET: ${JWT_SECRET}
-      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_DB_USE_LEGACY_GUCS: 'false'
       PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
       PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
-    command: "postgrest"
+    command: 'postgrest'
     networks:
       - supabase-network
 
@@ -260,15 +254,15 @@ services:
     healthcheck:
       test:
         [
-          "CMD",
-          "curl",
-          "-sSfL",
-          "--head",
-          "-o",
-          "/dev/null",
-          "-H",
-          "Authorization: Bearer ${ANON_KEY}",
-          "http://localhost:4000/api/tenants/realtime-dev/health"
+          'CMD',
+          'curl',
+          '-sSfL',
+          '--head',
+          '-o',
+          '/dev/null',
+          '-H',
+          'Authorization: Bearer ${ANON_KEY}',
+          'http://localhost:4000/api/tenants/realtime-dev/health',
         ]
       timeout: 5s
       interval: 5s
@@ -288,7 +282,7 @@ services:
       FLY_APP_NAME: realtime
       SECRET_KEY_BASE: UpNVntn3cDxHJpq99YMc1T1AQgQpc8kfYTuRgBiYa15BLrx8etQoXz3gZv1/u2oq
       ERL_AFLAGS: -proto_dist inet_tcp
-      ENABLE_TAILSCALE: "false"
+      ENABLE_TAILSCALE: 'false'
       DNS_NODES: "''"
     command: >
       sh -c "/app/bin/migrate && /app/bin/realtime eval 'Realtime.Release.seeds(Realtime.Repo)' && /app/bin/server"
@@ -307,15 +301,7 @@ services:
       imgproxy:
         condition: service_started
     healthcheck:
-      test:
-        [
-          "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
-          "http://localhost:5000/status"
-        ]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:5000/status']
       timeout: 5s
       interval: 5s
       retries: 3
@@ -332,7 +318,7 @@ services:
       TENANT_ID: stub
       REGION: stub
       GLOBAL_S3_BUCKET: stub
-      ENABLE_IMAGE_TRANSFORMATION: "true"
+      ENABLE_IMAGE_TRANSFORMATION: 'true'
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
       - ./volumes/storage:/var/lib/storage:z
@@ -353,7 +339,7 @@ services:
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
       SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      VERIFY_JWT: "${FUNCTIONS_VERIFY_JWT}"
+      VERIFY_JWT: '${FUNCTIONS_VERIFY_JWT}'
     volumes:
       - ./volumes/functions:/home/deno/functions:Z
     command:
@@ -410,14 +396,14 @@ services:
     container_name: supabase-imgproxy
     image: darthsim/imgproxy:latest
     healthcheck:
-      test: [ "CMD", "imgproxy", "health" ]
+      test: ['CMD', 'imgproxy', 'health']
       timeout: 5s
       interval: 5s
       retries: 3
     environment:
-      IMGPROXY_BIND: ":5001"
+      IMGPROXY_BIND: ':5001'
       IMGPROXY_LOCAL_FILESYSTEM_ROOT: /
-      IMGPROXY_USE_ETAG: "true"
+      IMGPROXY_USE_ETAG: 'true'
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
     volumes:
       - ./volumes/storage:/var/lib/storage:z
@@ -447,7 +433,7 @@ services:
     container_name: supabase-analytics
     image: supabase/logflare:latest
     healthcheck:
-      test: [ "CMD", "curl", "http://localhost:4000/health" ]
+      test: ['CMD', 'curl', 'http://localhost:4000/health']
       timeout: 5s
       interval: 5s
       retries: 10
@@ -477,15 +463,7 @@ services:
     container_name: supabase-vector
     image: timberio/vector:latest
     healthcheck:
-      test:
-        [
-          "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
-          "http://vector:9001/health"
-        ]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://vector:9001/health']
       timeout: 5s
       interval: 5s
       retries: 3
@@ -494,7 +472,7 @@ services:
       - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro
     environment:
       LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
-    command: [ "--config", "etc/vector/vector.yml" ]
+    command: ['--config', 'etc/vector/vector.yml']
     networks:
       - supabase-network
 
@@ -689,7 +667,7 @@ http {
         location / {
             root /usr/share/nginx/html;
             try_files $uri $uri/ /index.html;
-            
+
             # Cache static assets
             location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
                 expires 1y;
@@ -700,18 +678,18 @@ http {
         # Supabase API Proxy (REST API)
         location /rest/ {
             limit_req zone=api burst=20 nodelay;
-            
+
             proxy_pass http://supabase_kong;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            
+
             # CORS headers
             add_header 'Access-Control-Allow-Origin' '*' always;
             add_header 'Access-Control-Allow-Methods' 'GET, POST, PATCH, PUT, DELETE, OPTIONS' always;
             add_header 'Access-Control-Allow-Headers' 'Accept, Authorization, Content-Type, X-Requested-With, Range, apikey' always;
-            
+
             if ($request_method = 'OPTIONS') {
                 add_header 'Access-Control-Allow-Origin' '*';
                 add_header 'Access-Control-Allow-Methods' 'GET, POST, PATCH, PUT, DELETE, OPTIONS';
@@ -726,7 +704,7 @@ http {
         # Supabase Auth API
         location /auth/ {
             limit_req zone=auth burst=10 nodelay;
-            
+
             proxy_pass http://supabase_kong;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
@@ -753,7 +731,7 @@ http {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            
+
             # File upload size limit (adjust as needed)
             client_max_body_size 50M;
         }
@@ -810,6 +788,7 @@ http {
 ### EC2 Instance Sizing & Costs for Self-Hosted Supabase
 
 #### Option 1: Single Instance (Most Cost-Effective)
+
 ```yaml
 Instance Type: t3.xlarge (4 vCPU, 16 GB RAM)
 Monthly Cost: ~$120-135/month
@@ -821,21 +800,22 @@ Route 53: ~$0.50/month
 Total Monthly Cost: ~$163-183/month
 
 Resource Allocation:
-- Frontend (Nginx): 512MB RAM
-- Kong API Gateway: 1GB RAM
-- Supabase Studio: 1GB RAM
-- GoTrue (Auth): 512MB RAM
-- PostgREST (API): 1GB RAM
-- Realtime Server: 1GB RAM
-- Storage API: 512MB RAM
-- Edge Functions: 512MB RAM
-- PostgreSQL 15: 6GB RAM
-- Analytics/Logflare: 1GB RAM
-- Supporting services: 2GB RAM
-- System: 1GB RAM
+  - Frontend (Nginx): 512MB RAM
+  - Kong API Gateway: 1GB RAM
+  - Supabase Studio: 1GB RAM
+  - GoTrue (Auth): 512MB RAM
+  - PostgREST (API): 1GB RAM
+  - Realtime Server: 1GB RAM
+  - Storage API: 512MB RAM
+  - Edge Functions: 512MB RAM
+  - PostgreSQL 15: 6GB RAM
+  - Analytics/Logflare: 1GB RAM
+  - Supporting services: 2GB RAM
+  - System: 1GB RAM
 ```
 
 #### Option 2: Distributed Setup (Higher Availability)
+
 ```yaml
 Frontend Load Balancer: t3.small (2 instances) - ~$30/month
 Supabase Stack: t3.xlarge (2 instances) - ~$240/month
@@ -847,13 +827,14 @@ Route 53: ~$0.50/month
 Total Monthly Cost: ~$444-474/month
 
 Benefits:
-- High availability for all services
-- Database replication
-- Load balancing across instances
-- Better resource isolation
+  - High availability for all services
+  - Database replication
+  - Load balancing across instances
+  - Better resource isolation
 ```
 
 #### Option 3: Production-Ready (Enterprise Scale)
+
 ```yaml
 Frontend: t3.medium (3 instances + ASG) - ~$90/month
 Supabase Services: t3.2xlarge (3 instances + ASG) - ~$540/month
@@ -866,11 +847,11 @@ Monitoring: CloudWatch + custom dashboards - ~$15/month
 Total Monthly Cost: ~$945-980/month
 
 Benefits:
-- Enterprise-grade availability (99.9%+ uptime)
-- Auto-scaling based on demand
-- Managed database with automated backups
-- Global CDN for static assets
-- Advanced monitoring and alerting
+  - Enterprise-grade availability (99.9%+ uptime)
+  - Auto-scaling based on demand
+  - Managed database with automated backups
+  - Global CDN for static assets
+  - Advanced monitoring and alerting
 ```
 
 ## No Frontend Changes Required!
@@ -879,15 +860,16 @@ The beauty of self-hosting Supabase is that **your React application requires NO
 
 ```typescript
 // src/lib/supabase.ts (NO CHANGES NEEDED!)
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL // Just point to your domain
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY // Same key structure
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL; // Just point to your domain
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY; // Same key structure
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 ```
 
 Environment variables update:
+
 ```bash
 # .env.local (your React app)
 VITE_SUPABASE_URL=https://yourdomain.com
@@ -895,6 +877,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key-from-self-hosted-setup
 ```
 
 All your existing code works exactly the same:
+
 - Authentication: `supabase.auth.signUp()`, `supabase.auth.signIn()`
 - Database: `supabase.from('table').select()`
 - Realtime: `supabase.channel().on()`
@@ -976,27 +959,26 @@ Your existing React app should work immediately with no code changes needed!
 
 ```typescript
 // All existing code continues to work:
-const { data: tickets } = await supabase
-  .from('tickets')
-  .select('*')
+const { data: tickets } = await supabase.from('tickets').select('*');
 
 const { user } = await supabase.auth.signUp({
   email,
-  password
-})
+  password,
+});
 
 // Real-time subscriptions work the same
 supabase
   .channel('tickets')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, 
-    (payload) => console.log(payload)
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, payload =>
+    console.log(payload)
   )
-  .subscribe()
+  .subscribe();
 ```
 
 ## Deployment & CI/CD Pipeline
 
 ### GitHub Actions Workflow for Self-Hosted Supabase
+
 ```yaml
 # .github/workflows/deploy-self-hosted-supabase.yml
 name: Deploy Self-Hosted Supabase Stack
@@ -1011,7 +993,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -1028,10 +1010,10 @@ jobs:
           # Build React app
           npm install
           npm run build
-          
+
           # Build Docker image
           docker build -f docker/frontend/Dockerfile -t ticket-frontend:latest .
-          
+
           # Tag and push to ECR (optional)
           # docker tag ticket-frontend:latest $ECR_REGISTRY/ticket-frontend:${{ github.sha }}
           # docker push $ECR_REGISTRY/ticket-frontend:${{ github.sha }}
@@ -1054,7 +1036,9 @@ jobs:
 ## Monitoring & Backup Strategy
 
 ### Supabase Analytics Dashboard
+
 The self-hosted Supabase includes a built-in analytics dashboard accessible via Supabase Studio. Monitor:
+
 - Database performance
 - API request metrics
 - Authentication events
@@ -1062,6 +1046,7 @@ The self-hosted Supabase includes a built-in analytics dashboard accessible via 
 - Storage usage
 
 ### Database Backup Script
+
 ```bash
 #!/bin/bash
 # scripts/backup-supabase.sh
@@ -1092,6 +1077,7 @@ echo "Backup completed: $DATE"
 ```
 
 ### Monitoring with Grafana (Optional)
+
 ```yaml
 # Add to docker-compose.prod.yml
   grafana:
@@ -1142,6 +1128,7 @@ Self-hosting break-even point: ~15,000-20,000 monthly active users vs Supabase P
 ### When Self-Hosting Supabase Makes Sense
 
 ✅ **Advantages:**
+
 - **Complete control** over data and infrastructure
 - **No vendor lock-in** - you own the entire stack
 - **No code changes required** - exact same APIs as Supabase Cloud
@@ -1151,6 +1138,7 @@ Self-hosting break-even point: ~15,000-20,000 monthly active users vs Supabase P
 - **Data sovereignty** - your data never leaves your infrastructure
 
 ❌ **Considerations:**
+
 - **Operational overhead** (maintenance, updates, monitoring)
 - **Higher base costs** than managed Supabase for small applications
 - **Security responsibility** (patches, SSL certificates, access management)
@@ -1160,18 +1148,22 @@ Self-hosting break-even point: ~15,000-20,000 monthly active users vs Supabase P
 ## Implementation Timeline
 
 ### Phase 1: Infrastructure Setup (1-2 weeks)
+
 - Week 1: Set up AWS infrastructure (EC2, ALB, Route 53)
 - Week 2: Configure domain, SSL certificates, and security groups
 
 ### Phase 2: Self-Hosted Supabase Deployment (1-2 weeks)
+
 - Week 3: Deploy Supabase Docker stack and configure services
 - Week 4: Set up monitoring, backups, and test all functionality
 
 ### Phase 3: Data Migration (1 week)
+
 - Week 5: Export data from Supabase Cloud and import to self-hosted
 - Test all functionality and performance
 
 ### Phase 4: Frontend Migration & Go-Live (1 week)
+
 - Week 6: Update React app environment variables
 - Deploy and test in production
 - DNS cutover from Supabase Cloud to self-hosted
@@ -1188,7 +1180,7 @@ For your requirement of "dockerize and self host everything," the **self-hosted 
 ✅ **Proven architecture** - using official Supabase Docker containers  
 ✅ **Much faster implementation** - weeks instead of months  
 ✅ **Future flexibility** - can always move back to cloud or other providers  
-✅ **Cost-effective** at scale compared to managed services  
+✅ **Cost-effective** at scale compared to managed services
 
 This gives you everything you want: complete self-hosting control with minimal development overhead and maximum compatibility with your existing application.
 

@@ -7,12 +7,14 @@ This guide walks you through setting up a self-hosted Supabase development envir
 ### Development Flow Options
 
 #### Option 1: Local Development (FREE) 🆓
+
 - Docker Compose on your local machine
 - All Supabase services running locally
 - No cloud costs
 - Perfect for initial development and testing
 
 #### Option 2: AWS Development (~$38/month) 💰
+
 - EC2 instance with self-hosted Supabase
 - Real cloud environment for testing
 - Can be stopped when not in use
@@ -21,6 +23,7 @@ This guide walks you through setting up a self-hosted Supabase development envir
 ## Prerequisites
 
 ### Required Tools
+
 ```powershell
 # Install with Chocolatey (recommended)
 choco install docker-desktop terraform ansible awscli git
@@ -33,6 +36,7 @@ choco install docker-desktop terraform ansible awscli git
 ```
 
 ### AWS Setup (for Option 2)
+
 ```powershell
 # Configure AWS credentials
 aws configure --profile default
@@ -44,6 +48,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 ## Quick Start
 
 ### Local Development (Free)
+
 ```powershell
 # Start local development environment
 .\scripts\setup-dev-environment.ps1 -LocalOnly
@@ -55,6 +60,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 ```
 
 ### AWS Development Environment
+
 ```powershell
 # Deploy complete AWS infrastructure + application
 .\scripts\setup-dev-environment.ps1
@@ -73,6 +79,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 ## Environment Management
 
 ### Start/Stop Services
+
 ```powershell
 # Local environment
 .\scripts\manage-dev-environment.ps1 -Action start -Local
@@ -84,6 +91,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 ```
 
 ### View Status and Logs
+
 ```powershell
 # Check status
 .\scripts\manage-dev-environment.ps1 -Action status
@@ -96,6 +104,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 ```
 
 ### Cost Management
+
 ```powershell
 # View cost estimation
 .\scripts\manage-dev-environment.ps1 -Action cost
@@ -107,6 +116,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 ## Development Workflow
 
 ### 1. Initial Setup
+
 ```powershell
 # Clone repository
 git clone https://github.com/fatihiazmi/ticket-system.git
@@ -117,12 +127,14 @@ cd ticket-system
 ```
 
 ### 2. Local Development
+
 - Frontend runs at http://localhost:3000 with hot reload
 - Supabase Studio at http://localhost:3001 for database management
 - All APIs available at http://localhost:8000
 - PostgreSQL accessible at localhost:5432
 
 ### 3. Cloud Testing (Optional)
+
 ```powershell
 # When ready to test on cloud
 .\scripts\setup-dev-environment.ps1
@@ -134,6 +146,7 @@ ansible-playbook -i infrastructure/ansible/inventories/development.ini \
 ```
 
 ### 4. Frontend Development
+
 Your React app requires NO changes to work with self-hosted Supabase:
 
 ```typescript
@@ -147,6 +160,7 @@ VITE_SUPABASE_ANON_KEY=your-development-anon-key
 ```
 
 All your existing Supabase code works exactly the same:
+
 ```typescript
 // Authentication
 const { user } = await supabase.auth.signUp({ email, password })
@@ -161,6 +175,7 @@ supabase.channel('tickets').on('postgres_changes', ...)
 ## Cost Breakdown
 
 ### Local Development (FREE)
+
 - Docker containers on your machine
 - No cloud costs
 - Unlimited usage
@@ -168,18 +183,21 @@ supabase.channel('tickets').on('postgres_changes', ...)
 ### AWS Development Environment
 
 #### Option A: Always-On Instance
+
 - EC2 t3.medium: $30.40/month
 - 50GB storage: $4.00/month
 - Elastic IP: $3.65/month
 - **Total: ~$38/month**
 
 #### Option B: Stop When Not in Use
+
 - Running 8 hours/day: ~$12/month
 - Storage (always): $4.00/month
 - Elastic IP: $3.65/month
 - **Total: ~$20/month**
 
 #### Option C: AWS Free Tier (First 12 months)
+
 - t2.micro instance: FREE
 - 30GB storage: FREE
 - Limited performance but functional
@@ -188,6 +206,7 @@ supabase.channel('tickets').on('postgres_changes', ...)
 ## Infrastructure Details
 
 ### Terraform Modules
+
 ```
 infrastructure/terraform/
 ├── environments/
@@ -200,6 +219,7 @@ infrastructure/terraform/
 ```
 
 ### Ansible Roles
+
 ```
 infrastructure/ansible/
 ├── playbooks/
@@ -213,6 +233,7 @@ infrastructure/ansible/
 ```
 
 ### Docker Configuration
+
 ```
 infrastructure/docker/
 ├── docker-compose.dev.yml       # Local development stack
@@ -223,6 +244,7 @@ infrastructure/docker/
 ## Security Considerations
 
 ### Development Security
+
 - Default passwords for development convenience
 - Auto-confirmation enabled for email auth
 - Exposed ports for easy access
@@ -230,6 +252,7 @@ infrastructure/docker/
 - HTTP (not HTTPS) for simplicity
 
 ### Production Differences
+
 - Strong passwords and secrets
 - HTTPS with SSL certificates
 - Restricted network access
@@ -242,6 +265,7 @@ infrastructure/docker/
 ### Common Issues
 
 #### Docker Issues
+
 ```powershell
 # Check if Docker is running
 docker info
@@ -251,6 +275,7 @@ docker info
 ```
 
 #### AWS Access Issues
+
 ```powershell
 # Test AWS credentials
 aws sts get-caller-identity
@@ -260,6 +285,7 @@ aws configure list
 ```
 
 #### Service Not Starting
+
 ```powershell
 # Check logs
 .\scripts\manage-dev-environment.ps1 -Action logs
@@ -269,11 +295,14 @@ docker-compose logs supabase-db-dev
 ```
 
 #### Port Conflicts
+
 If ports 3000, 3001, 8000, or 5432 are in use:
+
 1. Stop conflicting services
 2. Or modify ports in docker-compose.dev.yml
 
 ### Getting Help
+
 1. Check service logs first
 2. Verify all prerequisites are installed
 3. Ensure AWS credentials are configured
